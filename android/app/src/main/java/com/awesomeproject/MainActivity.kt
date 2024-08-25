@@ -22,13 +22,14 @@ class MainActivity : ReactActivity() {
 
    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Ensure ReactContext is available
-        val reactContext = (application as MainApplication).reactNativeHost.reactInstanceManager.currentReactContext
-        reactContext?.let {
-            // Emit event with a delay of 3 seconds (3000 milliseconds)
-            emitEventWithDelay(it, 3000)
-        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            // Ensure ReactContext is available
+            val reactContext = (application as MainApplication).reactNativeHost.reactInstanceManager.currentReactContext
+            reactContext?.let {
+                // Emit event with a delay of 3 seconds (3000 milliseconds)
+                emitEventWithDelay(it, 3000)
+            }
+        }, 3000)
     }
 
    private fun emitEvent(reactContext: ReactContext) {
