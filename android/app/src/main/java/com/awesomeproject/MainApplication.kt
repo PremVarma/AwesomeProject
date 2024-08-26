@@ -10,10 +10,6 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
-import com.awesomeproject.ScreenshotPackage
-import android.os.Looper
-import com.facebook.react.ReactActivity
-import com.facebook.react.bridge.ReactContext
 
 class MainApplication : Application(), ReactApplication {
 
@@ -21,7 +17,7 @@ class MainApplication : Application(), ReactApplication {
       object : DefaultReactNativeHost(this) {
         override fun getPackages(): List<ReactPackage> =
             PackageList(this).packages.apply {
-              add(ScreenshotPackage())
+             
             }
 
         override fun getJSMainModuleName(): String = "index"
