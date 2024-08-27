@@ -17,13 +17,13 @@ class ScreenshotObs(private val contentResolver: ContentResolver,private val rea
         if (uri != null && uri.toString().contains(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString())) {
             Handler().postDelayed({
                 contentResolver.query(uri, arrayOf(MediaStore.Images.Media.DISPLAY_NAME), null, null, null)?.use { cursor ->
-                    emitScreenshotDetectedEvent();
                     if (cursor.moveToFirst()) {
                         val fileNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
                         val fileName = cursor.getString(fileNameColumnIndex)
 
                         if (fileName.toLowerCase().contains("screenshot")) {
                             Log.d("ScreenshotObserver", "Screenshot detected: $fileName")
+                            emitScreenshotDetectedEvent();
                         } else {
                             Log.d("ScreenshotObserver", "New image detected but not a screenshot: $fileName")
                         }
