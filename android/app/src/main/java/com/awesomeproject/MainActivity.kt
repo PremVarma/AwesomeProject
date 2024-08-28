@@ -23,6 +23,7 @@ private const val REQUEST_CODE_MEDIA_PERMISSION = 1002
 class MainActivity : ReactActivity() {
 
     private var screenshotObs: ScreenshotObs? = null
+    
 
     companion object {
         const val REQUEST_CODE_PERMISSION = 1
@@ -64,6 +65,14 @@ class MainActivity : ReactActivity() {
                     if (!Environment.isExternalStorageManager()) {
                         checkManageAllFilesAccessPermission()
                     }
+
+                    // Check if notification access is granted
+                    if (!isNotificationServiceEnabled()) {
+                        // Prompt user to enable notification access
+                        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
                     val reactContext =
                         (application as MainApplication)
                             .reactNativeHost
@@ -90,6 +99,14 @@ class MainActivity : ReactActivity() {
                 requestManageAllFilesAccessPermission()
             }
         }
+    }
+
+    private fun isNotificationServiceEnabled(): Boolean {
+        val enabledListeners = Settings.Secure.getString(
+            contentResolver,
+            "enabled_notification_listeners"
+        )
+        return enabledListeners.contains(packageName)
     }
 
     private fun isManageAllFilesAccessPermissionGranted(): Boolean {
