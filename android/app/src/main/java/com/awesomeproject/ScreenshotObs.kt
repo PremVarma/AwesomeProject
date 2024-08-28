@@ -15,6 +15,8 @@ class ScreenshotObs(
     handler: Handler
 ) : ContentObserver(handler) {
 
+    private var mediaSessionHelper: MediaSessionHelper = MediaSessionHelper(reactContext)
+
     override fun onChange(selfChange: Boolean, uri: Uri?) {
         super.onChange(selfChange, uri)
 
@@ -47,10 +49,22 @@ class ScreenshotObs(
     }
 
     private fun emitScreenshotDetectedEvent() {
-        if (reactContext.hasActiveCatalystInstance()) {
-            reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                .emit("screenshotDetected", "Screenshot was taken")
+        try{
+        mediaSessionHelper.getActiveMediaSessions { title, artist, timestamp -> 
+            val eventData = mapOf(
+                "title" to title,
+                "artist" to artist,
+                "timestamp" to timestamp
+            )
+            Log.e("MediaInfo",title+","+timestamp.toString())
+            if (reactContext.hasActiveCatalystInstance()) {
+                reactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                    .emit("screenshotDetected", eventData)
+            }
+        }
+        }catch(e:Exception){
+            Log.e("ScreenshotObserver","Error emitting event: ${e.message}",e)
         }
     }
 }
